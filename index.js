@@ -308,7 +308,8 @@ function receivedMessage(event) {
         break;
 
       default:
-        sendTextMessage(senderID, messageText);
+        // sendTextMessage(senderID, messageText);
+        sendRestaurantMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -402,6 +403,27 @@ function receivedAccountLink(event) {
 
   console.log("Received account link event with for user %d with status %s " +
     "and auth code %s ", senderID, status, authCode);
+}
+
+/*
+ * Send a text message using the Send API.
+ *
+ */
+function sendRestaurantMessage(recipientId, messageText) {
+
+  // do processing of messageText?
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "This is a restaurant recommendation",
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
 }
 
 /*
