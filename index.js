@@ -451,8 +451,8 @@ function processMessageForRestaurant(recipientId, messageText) {
   // Replace this with watson to get intent and entity.
   var cuisine = getCuisineType(messageText);
 
-  var have_cuisine = (preferred_cuisine == "");
-  var have_location = (location_lat == "");
+  var have_cuisine = (preferred_cuisine != "");
+  var have_location = (location_lat != "");
 
   if (!have_cuisine) {
     return "What type of food would you like to eat? (eg. Mexican food).";
@@ -539,7 +539,7 @@ function sendLocationMessage(senderID, messageAttachments) {
   console.log(location_lat);
   console.log(location_long);
 
-  locationMessageText = "Got your location!";
+  var locationMessageText = "Got your location!";
 
   var messageData = {
     recipient: {
