@@ -460,7 +460,7 @@ function checkUserInGlobalContext(recipientId) {
       preferred_cuisine: "",
       location_lat: "",
       location_long: "",
-	  time = ""
+	  time: ""
     };
   }
 }
