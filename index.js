@@ -498,7 +498,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
       }
     };
 
-	async.series([
+	async.waterfall([
 		function(cb) {
 			callSendAPI(messageData);
 			cb(null);
