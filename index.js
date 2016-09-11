@@ -442,7 +442,7 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   if (have_cuisine && have_location) {
 	  if (have_time) {
-		 sendMessageToUserFromYelpResult(recipientId, messageText);
+		 sendMessageToUserFromYelpResult(recipientId);
 	 } else {
 		 sendAskForTimeMessage(recipientId);
 	 }
@@ -465,7 +465,7 @@ function sendRestaurantMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-function sendMessageToUserFromYelpResult(recipientId, time) {
+function sendMessageToUserFromYelpResult(recipientId) {
   checkUserInGlobalContext(recipientId)
 
   var preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
@@ -513,7 +513,7 @@ function sendMessageToUserFromYelpResult(recipientId, time) {
 		}
 	],
 function(err, result) {
-	if (time && time == "Tonight") {
+	if (global_context[recipientId]['time'] == "Tonight") {
 		sendBookingTimeMessage(recipientId);
 	} else {
 		var message = {
