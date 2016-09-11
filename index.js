@@ -440,37 +440,6 @@ function getCuisineType(messageText) {
   return cuisine_type;
 }
 
-/*
- * Process the user's message text to find restaurant
- * request information.
- *
- */
-function processMessageForRestaurant(recipientId, messageText) {
-
-  // Get cuisine.
-  // Replace this with watson to get intent and entity.
-  var cuisine = getCuisineType(messageText);
-
-  var have_cuisine = (preferred_cuisine != "");
-  var have_location = (location_lat != "");
-
-  if (!have_cuisine) {
-    return "What type of food would you like to eat? (eg. Mexican food).";
-  } else if (!have_location) {
-    restaurantMessageText = "The cuisine is " + cuisine + ". Please give us a location (you can use the location button).";
-    return restaurantMessageText;
-  } else {
-    restaurantMessageText = "The cuisine is " + cuisine + ". The location is " + location_lat;
-  }
-  
-  if (cuisine) {
-    restaurantMessageText = "The cuisine is " + cuisine;
-    preferred_cuisine = cuisine;
-  }
-
-  return restaurantMessageText;
-}
-
 function sendPreferredCuisineMessage(recipientId) {
 
   var output_text = "No preferred cuisine specified";
@@ -502,8 +471,8 @@ function sendRestaurantMessage(recipientId, messageText) {
   // Replace this with watson to get intent and entity.
   var cuisine = getCuisineType(messageText);
 
-  var have_cuisine = (preferred_cuisine == "");
-  var have_location = (location_lat == "");
+  var have_cuisine = (preferred_cuisine != "");
+  var have_location = (location_lat != "");
 
   var restaurantMessageText = "";
   if (!have_cuisine) {
