@@ -528,8 +528,6 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   if (have_cuisine && have_location && have_time) {
 	  sendMessageToUserFromYelpResult(recipientId);
-  } else if (!have_time) {
-    sendButtonMessage(recipientId);
   } else {
     if (have_location) {
       restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
