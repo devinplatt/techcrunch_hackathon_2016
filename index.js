@@ -234,17 +234,14 @@ function receivedMessage(event) {
         break;
 
 	case 'get started':
-	console.log("first GETSTARTED");
 	  sendHiMessage(senderID);
 	  break;
 
 	  case 'Get started':
-	  console.log("second GETSTARTED");
 	  sendHiMessage(senderID);
 	  break;
 
   case 'Get Started':
-  console.log("third GETSTARTED");
   sendHiMessage(senderID);
   break;
 
@@ -509,14 +506,10 @@ function sendMessageToUserFromYelpResult(recipientId) {
 		function(cb) {
 			callSendAPI(mapMessageData);
 			cb(null);
-		},
-		function(cb) {
-			sendBookingTimeMessage(recipientId);
-			cb(null);
 		}
 	],
 function(err, result) {
-	console.log("Done sending responses");
+	sendBookingTimeMessage(recipientId);
 });
   });
 }
