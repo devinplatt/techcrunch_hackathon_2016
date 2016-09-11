@@ -519,6 +519,7 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   // Get cuisine.
   // Replace this with watson to get intent and entity.
+  console.log(messageText);
   var cuisine = getCuisineType(recipientId, messageText);
 
   var have_cuisine = (global_context[recipientId]['preferred_cuisine'] != "");
