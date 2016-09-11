@@ -800,11 +800,11 @@ function sendButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Now",
-            payload: setTime(recipientId, 'now')
+            payload: "now"
           }, {
             type: "postback",
             title: "Tonight",
-            payload: setTime(recipientId, 'tonight')
+            payload: "tonight"
           }]
         }
       }
