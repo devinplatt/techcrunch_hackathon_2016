@@ -512,32 +512,32 @@ function sendMessageToUserFromYelpResult(recipientId) {
 			id: recipientId
 		  },
 		  message: {
-			text: result.name,
+			text: "I highly recommend this place. It has great " + preferred_cuisine " food.",
 			metadata: "DEVELOPER_DEFINED_METADATA"
 		  }
 		};
-	  callSendAPI(messageData);
+	   callSendAPI(messageData);
 
-    // result. : name, image, phone, street, city, 
-    // crossroad (may be empty), latitude, longitude, is_closed (true/false)
-    console.log('image');
-    console.log(result.image);
-    var large_image = result.image.replace('ms.jpg', 'ls.jpg')
-    console.log(large_image);
-    var imageMessageData = {
-      recipient: {
-        id: recipientId
-      },
-      message: {
-        attachment: {
-          type: "image",
-          payload: {
-            url: large_image
-          }
-        }
-      }
-    };
-    callSendAPI(imageMessageData);
+  //   // result. : name, image, phone, street, city, 
+  //   // crossroad (may be empty), latitude, longitude, is_closed (true/false)
+  //   console.log('image');
+  //   console.log(result.image);
+  //   var large_image = result.image.replace('ms.jpg', 'ls.jpg')
+  //   console.log(large_image);
+  //   var imageMessageData = {
+  //     recipient: {
+  //       id: recipientId
+  //     },
+  //     message: {
+  //       attachment: {
+  //         type: "image",
+  //         payload: {
+  //           url: large_image
+  //         }
+  //       }
+  //     }
+  //   };
+  //   callSendAPI(imageMessageData);
 
     // http://stackoverflow.com/questions/38017382/how-to-send-location-from-facebook-messenger-platform
     var mapMessageData = {
@@ -551,7 +551,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
                   template_type: "generic",
                   elements: {
                       element: {
-                          title: "Restaurant location",
+                          title: result.name,
                           image_url: "https:\/\/maps.googleapis.com\/maps\/api\/staticmap?size=764x400&center="+result.latitude+","+result.longitude+"&zoom=25&markers="+result.latitude+","+result.longitude,
                           item_url: "http:\/\/maps.apple.com\/maps?q="+result.latitude+","+result.longitude+"&z=16"
                       }
