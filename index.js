@@ -265,6 +265,8 @@ function receivedMessage(event) {
 
   if (messageText) {
 
+	  console.log(messageText);
+
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
@@ -524,11 +526,16 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   var have_cuisine = (global_context[recipientId]['preferred_cuisine'] != "");
   var have_location = (global_context[recipientId]['location_lat'] != "");
+  var have_time = (global_context[recipientId]['time'] != "")
 
   var restaurantMessageText = "";
 
   if (have_cuisine && have_location) {
-	  sendMessageToUserFromYelpResult(recipientId);
+	  if (have_time) {
+		 sendMessageToUserFromYelpResult(recipientId);
+	 } else {
+		 sendAskForTimeMessage(recipientId);
+	 }
   } else {
     if (have_location) {
       restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
@@ -609,6 +616,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
       }
     };
     callSendAPI(mapMessageData);
+	sendBookingTimeMessage(recipientId);
   });
 }
 
@@ -625,9 +633,14 @@ function sendLocationMessage(senderID, messageAttachments) {
   global_context[senderID]['location_long'] = location_long;
 
   var preferred_cuisine = global_context[senderID]['preferred_cuisine'];
+  var time = global_context[senderID]['time'];
   if (preferred_cuisine != "") {
-	  sendMessageToUserFromYelpResult(senderID);
-	  return;
+	  if (time != "") {
+		  sendMessageToUserFromYelpResult(senderID);
+		  return;
+	  } else {
+		  sendAskForTimeMessage(senderID);
+	  }
   }
 
   console.log("location lat and long:");
@@ -648,6 +661,109 @@ function sendLocationMessage(senderID, messageAttachments) {
 
   callSendAPI(messageData);
 }
+
+
+
+
+
+
+
+
+
+function sendAskForTimeMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "When do you want to go there?",
+          buttons:[{
+            type: "postback",
+            title: "Now",
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
+          }, {
+            type: "postback",
+            title: "Tonight",
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+
+
+function sendBookingTimeMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "Ok, those times are available for booking, would look like me to do it for you?",
+          buttons:[{
+            type: "postback",
+            title: "7:15",
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
+          }, {
+            type: "postback",
+            title: "7:30",
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
+		},
+	{
+	  type: "postback",
+	  title: "7:45",
+	  payload: "DEVELOPED_DEFINED_PAYLOAD"
+  },
+{
+  type: "postback",
+  title: "8:45",
+  payload: "DEVELOPED_DEFINED_PAYLOAD"
+},
+{
+  type: "postback",
+  title: "9:30",
+  payload: "DEVELOPED_DEFINED_PAYLOAD"
+},
+{
+  type: "postback",
+  title: "10:00",
+  payload: "DEVELOPED_DEFINED_PAYLOAD"
+}]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
  * Send an image using the Send API.
