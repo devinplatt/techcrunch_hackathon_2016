@@ -399,7 +399,6 @@ function receivedDeliveryConfirmation(event) {
  *
  */
 function receivedPostback(event) {
-	console.log(event.postback);
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfPostback = event.timestamp;
@@ -412,6 +411,8 @@ function receivedPostback(event) {
 	if (payload == "WHATTIME_TONIGHT") {
 		global_context[senderID]['time'] = "Tonight";
 	}
+
+	sendRestaurantMessage(senderID, messageText)
 
 }
 
