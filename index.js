@@ -379,7 +379,7 @@ function checkUserInGlobalContext(recipientId, reset) {
 	  time: ""
     };
   }
-  if (reset == "true") {
+  if (reset == true) {
 	  global_context[recipientId] = {
         preferred_cuisine: "",
         location_lat: "",
