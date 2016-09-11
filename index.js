@@ -415,7 +415,7 @@ function getCuisineType(messageText) {
   var cuisine_type = false;
   var normalized_messageText = messageText.toLowerCase();
 
-  for (cuisine in cuisine_list) {
+  for (var cuisine in cuisine_list) {
     if (normalized_messageText.indexOf(substring) !== -1) {
       cuisine_type = cuisine;
     }
