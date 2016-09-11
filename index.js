@@ -410,9 +410,12 @@ function receivedPostback(event) {
 
 	if (payload == "WHATTIME_TONIGHT") {
 		global_context[senderID]['time'] = "Tonight";
+		sendRestaurantMessage(senderID, "Tonight");
 	}
 
-	sendRestaurantMessage(senderID, "Tonight");
+	if (payload == "8:30") {
+		console.log("GOOD !!")
+	}
 
 }
 
@@ -574,28 +577,6 @@ function sendMessageToUserFromYelpResult(recipientId) {
 		};
 	   callSendAPI(messageData);
 
-  //   // result. : name, image, phone, street, city,
-  //   // crossroad (may be empty), latitude, longitude, is_closed (true/false)
-  //   console.log('image');
-  //   console.log(result.image);
-  //   var large_image = result.image.replace('ms.jpg', 'ls.jpg')
-  //   console.log(large_image);
-  //   var imageMessageData = {
-  //     recipient: {
-  //       id: recipientId
-  //     },
-  //     message: {
-  //       attachment: {
-  //         type: "image",
-  //         payload: {
-  //           url: large_image
-  //         }
-  //       }
-  //     }
-  //   };
-  //   callSendAPI(imageMessageData);
-
-    // http://stackoverflow.com/questions/38017382/how-to-send-location-from-facebook-messenger-platform
     var mapMessageData = {
       recipient: {
         id: recipientId
@@ -702,51 +683,49 @@ function sendAskForTimeMessage(recipientId) {
 
 
 function sendBookingTimeMessage(recipientId) {
+console.log("\nSENDING BOOKING TIMES\n");
+
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text: "Ok, those times are available for booking, would look like me to do it for you?",
-          buttons:[{
-            type: "postback",
-            title: "7:15",
-            payload: "DEVELOPED_DEFINED_PAYLOAD"
-          }, {
-            type: "postback",
-            title: "7:30",
-            payload: "DEVELOPED_DEFINED_PAYLOAD"
-		},
-	{
-	  type: "postback",
-	  title: "7:45",
-	  payload: "DEVELOPED_DEFINED_PAYLOAD"
-  },
-{
-  type: "postback",
-  title: "8:45",
-  payload: "DEVELOPED_DEFINED_PAYLOAD"
-},
-{
-  type: "postback",
-  title: "9:30",
-  payload: "DEVELOPED_DEFINED_PAYLOAD"
-},
-{
-  type: "postback",
-  title: "10:00",
-  payload: "DEVELOPED_DEFINED_PAYLOAD"
-}]
-        }
-      }
-    }
-  };
+		attachment: {
+			type: "template",
+			payload: {
+				template_type: "button",
+				text: "Ok, those times are available for booking, would look like me to do it for you?",
+				buttons:[{
+					type: "postback",
+					title: "7:15",
+					payload: "7:15"
+				}, {
+					type: "postback",
+					title: "7:30",
+					payload: "7:30"
+				},
+				{
+					type: "postback",
+					title: "7:45",
+					payload: "7:45"
+				},
+				{
+					type: "postback",
+					title: "8:45",
+					payload: "8:45"
+				},
+				{
+					type: "postback",
+					title: "9:30",
+					payload: "9:30"
+				}
+			]
+		}
+	}
+}
+};
 
-  callSendAPI(messageData);
+callSendAPI(messageData);
 }
 
 
