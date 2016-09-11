@@ -413,18 +413,17 @@ function receivedPostback(event) {
 		sendRestaurantMessage(senderID, "Tonight");
 	}
 
-	if (payload == "8:45") {
+	if (payload == "7:45" || payload == "8:45" || payload == "9:30") {
 		var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
 		request(url, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				body = JSON.parse(body);
-				console.log(body.first_name);
 				var messageData = {
 				  recipient: {
 					id: senderID
 				  },
 				  message: {
-					text: "Ok .",
+					text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+". Enjoy!",
 					metadata: "DEVELOPER_DEFINED_METADATA"
 				  }
 				};
