@@ -485,6 +485,7 @@ function sendRestaurantMessage(recipientId, messageText) {
   var restaurantMessageText = "";
 
   if (have_cuisine && have_location) {
+	  console.log("HAVE BOTH");
 	  yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
 		  var messageData = {
 	        recipient: {
@@ -1033,7 +1034,6 @@ var yelpParseResponseBody = function(body, callback) {
 };
 
 var yelpReturnFormattedResult = function(result) {
-	console.log(result);
 	var res = {
 		name: result.name,
 		rating: result.rating,
