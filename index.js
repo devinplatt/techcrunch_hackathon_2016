@@ -336,21 +336,11 @@ function receivedPostback(event) {
 					id: senderID
 				  },
 				  message: {
-					text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".",
+					text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".\nOh, by the way, you earned a 10% discount by booking with PickMe. Enjoy!",
 					metadata: "DEVELOPER_DEFINED_METADATA"
 				  }
 				};
 			   callSendAPI(messageData);
-
-			  callSendAPI({
-				recipient: {
-				  id: senderID
-				},
-				message: {
-				  text: "Oh, by the way, a 10% discount will be coming with the check if you just say 'PickMe' to your waiter. Enjoy!",
-				  metadata: "DEVELOPER_DEFINED_METADATA"
-				}
-			  });
 			}
 		});
 	}
