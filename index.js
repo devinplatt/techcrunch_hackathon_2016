@@ -485,7 +485,6 @@ function sendRestaurantMessage(recipientId, messageText) {
   var restaurantMessageText = "";
 
   if (have_cuisine && have_location) {
-	  console.log("HAVE BOTH");
 	  yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
 		  var messageData = {
 	        recipient: {
@@ -991,7 +990,7 @@ var yelpMakeQuery = function(term, type, location, radius, callback) {
 		parameters.location = location;
 	} else if (typeof location == "object") {
 		if (location.hasOwnProperty("lat") && location.hasOwnProperty("long")) {
-			parameters.cll = location.lat + "," + location.long;
+			parameters.ll = parseFloat(location.lat) + "," + parseFloat(location.long);
 		}
 	}
     var consumerSecret = yelpConsumerSecret;
