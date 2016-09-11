@@ -483,25 +483,37 @@ function sendRestaurantMessage(recipientId, messageText) {
   var have_location = (location_lat != "");
 
   var restaurantMessageText = "";
-  if (!have_cuisine) {
-    restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
-  } else if (!have_location) {
-    restaurantMessageText = "Where are you? (use the location button)";
-  }
-  else {  // Have both location and cuisine.
-    restaurantMessageText = "The cuisine is " + cuisine + ". The location is " + location_lat;
-  }
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: restaurantMessageText,
-      metadata: "DEVELOPER_DEFINED_METADATA"
-    }
-  };
 
-  callSendAPI(messageData);
+  if (have_cuisine && have_location) {
+	  yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
+		  var messageData = {
+	        recipient: {
+	          id: recipientId
+	        },
+	        message: {
+	          text: result.name,
+	          metadata: "DEVELOPER_DEFINED_METADATA"
+	        }
+	      };
+	  	callSendAPI(messageData);
+	  });
+  } else {
+	if (have_location) {
+      restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
+    } else {
+      restaurantMessageText = "Where are you? (use the location button)";
+    }
+	var messageData = {
+      recipient: {
+        id: recipientId
+      },
+      message: {
+        text: restaurantMessageText,
+        metadata: "DEVELOPER_DEFINED_METADATA"
+      }
+    };
+	callSendAPI(messageData);
+  }
 }
 
 /*
@@ -970,11 +982,17 @@ var yelpMakeQuery = function(term, type, location, radius, callback) {
 		oauth_timestamp: n().toString().substr(0,10),
         oauth_token: yelpToken,
 		term: term,
-		location: location,
 		limit: 12,
 		radius_filter: radius,
 		category_filter: type
     };
+	if (typeof location == "string") {
+		parameters.location = location;
+	} else if (typeof location == "object") {
+		if (location.hasOwnProperty("lat") && location.hasOwnProperty("long")) {
+			parameters.cll = location.lat + "," + location.long;
+		}
+	}
     var consumerSecret = yelpConsumerSecret;
     var tokenSecret = yelpTokenSecret;
     var signature = oauthSignature.generate(httpMethod, url, parameters, consumerSecret, tokenSecret, { encodeSignature: false});
@@ -1036,15 +1054,6 @@ var yelpReturnFormattedResult = function(result) {
 	if (result.hasOwnProperty('is_closed')) { res.is_closed = result.is_closed; }
 	return (res);
 };
-
-
-
-app.get("/yelp_test", function(req,res) {
-	yelpMakeQuery("", "mexican", "San Francisco, CA", 10000, function(result) {
-		res.json(result);
-	});
-});
-
 
 
 
