@@ -348,7 +348,8 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var output_text = "Hi Devin ! What would you like me to pick you ? (ex: \"Pick me a mexican restaurant\").";
+  var userName = getUserName(recipientId);
+  var output_text = "Hi Devin ! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
    
   var messageData = {
     recipient: {
@@ -1071,7 +1072,16 @@ function callSendAPI(messageData) {
   });
 }
 
-
+function getUserName(recipientId) {
+  request('https://graph.facebook.com/v2.6/' + recipientId + '?access_token=' + PAGE_ACCESS_TOKEN, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      sendTextMessage(recipientId, body);
+    }
+    else {
+      console.log(error);
+    }
+  })
+}
 
 
 
