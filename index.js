@@ -348,7 +348,7 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var output_text = "Hi " + userName + " ! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
+  var output_text = "Hi " + userName + "! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
    
   var messageData = {
     recipient: {
@@ -791,7 +791,7 @@ function sendButtonMessage(recipientId) {
         type: "template",
         payload: {
           template_type: "button",
-          text: "When do you want to go there ?",
+          text: "When do you want to go there?",
           buttons:[{
             type: "postback",
             title: "Now",
