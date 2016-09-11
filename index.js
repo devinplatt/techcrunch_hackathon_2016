@@ -522,7 +522,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
     // crossroad (may be empty), latitude, longitude, is_closed (true/false)
     console.log('image');
     console.log(result.image);
-    large_image = result.image.replace('ms.jpg', 'ls.jpg')
+    var large_image = result.image.replace('ms.jpg', 'ls.jpg')
     console.log(large_image);
     var imageMessageData = {
       recipient: {
