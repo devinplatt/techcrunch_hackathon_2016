@@ -19,6 +19,8 @@ const
   request = require('request');
 
 var preferred_cuisine = "";
+var location_lat = "";
+var location_long = "";
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -318,7 +320,11 @@ function receivedMessage(event) {
         sendRestaurantMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
+    if messageAttachments[0].payload.hasOwnProperty('coordinates') {
+      sendLocationMessage(senderID, messageAttachments);
+    } else {
+      sendTextMessage(senderID, "Message with attachment received");
+    }
   }
 }
 
@@ -427,6 +433,7 @@ function getCuisineType(messageText) {
     var cuisine = cuisine_list[i]
     if (normalized_messageText.indexOf(cuisine) !== -1) {
       cuisine_type = cuisine;
+      preferred_cuisine = cuisine;
     }
   }
 
@@ -440,9 +447,22 @@ function getCuisineType(messageText) {
  */
 function processMessageForRestaurant(recipientId, messageText) {
 
-  // do processing of messageText?
+  // Get cuisine.
+  // Replace this with watson to get intent and entity.
   var cuisine = getCuisineType(messageText);
-  var restaurantMessageText = "No cuisine specified.";
+
+  var have_cuisine = (preferred_cuisine == "");
+  var have_location = (location_lat == "");
+
+  if (!have_cuisine) {
+    return "What type of food would you like to eat? (eg. Mexican food).";
+  } else if (!have_location) {
+    restaurantMessageText = "The cuisine is " + cuisine + ". Please give us a location (you can use the location button).";
+    return restaurantMessageText;
+  } else {
+    restaurantMessageText = "The cuisine is " + cuisine + ". The location is " + location_lat;
+  }
+  
   if (cuisine) {
     restaurantMessageText = "The cuisine is " + cuisine;
     preferred_cuisine = cuisine;
@@ -478,15 +498,55 @@ function sendPreferredCuisineMessage(recipientId) {
  */
 function sendRestaurantMessage(recipientId, messageText) {
 
-  var restaurantMessageText = processMessageForRestaurant(recipientId,
-                                                          messageText);
+  // Get cuisine.
+  // Replace this with watson to get intent and entity.
+  var cuisine = getCuisineType(messageText);
 
+  var have_cuisine = (preferred_cuisine == "");
+  var have_location = (location_lat == "");
+
+  var restaurantMessageText = "";
+  if (!have_cuisine) {
+    restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
+  } else if (!have_location) {
+    restaurantMessageText = "Where are you? (use the location button)";
+  }
+  else {  // Have both location and cuisine.    
+    restaurantMessageText = "The cuisine is " + cuisine + ". The location is " + location_lat;
+  }
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
       text: restaurantMessageText,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+/*
+ * Send get the GPS location and send a confirmation via the Send API.
+ *
+ */
+function sendLocationMessage(senderID, messageAttachments) {
+  location_lat = messageAttachments[0].payload.coordinates.lat;
+  location_long = messageAttachments[0].payload.coordinates.long;
+
+  console.log("location lat and long:");
+  console.log(location_lat);
+  console.log(location_long);
+
+  locationMessageText = "Got your location!";
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: locationMessageText,
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
