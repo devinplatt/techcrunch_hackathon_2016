@@ -552,7 +552,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
                   elements: {
                       element: {
                           title: "Restaurant location",
-                          image_url: "https:\/\/maps.googleapis.com\/maps\/api\/staticmap?size=764x400&center="+result.latitude+","+result.longitude+"&zoom=25&markers="+result.latitude+","+esult.longitude,
+                          image_url: "https:\/\/maps.googleapis.com\/maps\/api\/staticmap?size=764x400&center="+result.latitude+","+result.longitude+"&zoom=25&markers="+result.latitude+","+result.longitude,
                           item_url: "http:\/\/maps.apple.com\/maps?q="+result.latitude+","+result.longitude+"&z=16"
                       }
                   }
