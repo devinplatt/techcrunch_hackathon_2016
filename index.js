@@ -259,7 +259,7 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-	checkUserInGlobalContext(recipientId);
+	checkUserInGlobalContext(recipientId, true);
 	var url = "https://graph.facebook.com/v2.6/"+recipientId+"?access_token="+PAGE_ACCESS_TOKEN;
 	request(url, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
@@ -370,7 +370,7 @@ function receivedAccountLink(event) {
     "and auth code %s ", senderID, status, authCode);
 }
 
-function checkUserInGlobalContext(recipientId) {
+function checkUserInGlobalContext(recipientId, reset) {
   if (!(recipientId in global_context)) {
     global_context[recipientId] = {
       preferred_cuisine: "",
@@ -378,6 +378,14 @@ function checkUserInGlobalContext(recipientId) {
       location_long: "",
 	  time: ""
     };
+  }
+  if (reset == "true") {
+	  global_context[recipientId] = {
+        preferred_cuisine: "",
+        location_lat: "",
+        location_long: "",
+		time: ""
+      };
   }
 }
 
@@ -394,7 +402,7 @@ function getCuisineType(recipientId, messageText) {
     var cuisine = cuisine_list[i]
     if (normalized_messageText.indexOf(cuisine) !== -1) {
       cuisine_type = cuisine;
-      checkUserInGlobalContext(recipientId)
+      checkUserInGlobalContext(recipientId, false)
       global_context[recipientId]['preferred_cuisine'] = cuisine;
       // preferred_cuisine = cuisine;
     }
@@ -407,7 +415,7 @@ function sendPreferredCuisineMessage(recipientId) {
 
   var output_text = "No preferred cuisine specified";
 
-  checkUserInGlobalContext(recipientId)
+  checkUserInGlobalContext(recipientId, false)
   var preferred_cuisine = global_context[recipientId]['preferred_cuisine']
   if (preferred_cuisine != "") {
     output_text = "Preferred cuisine is " + preferred_cuisine;
@@ -428,7 +436,7 @@ function sendPreferredCuisineMessage(recipientId) {
 
 
 function sendRestaurantMessage(recipientId, messageText) {
-  checkUserInGlobalContext(recipientId)
+  checkUserInGlobalContext(recipientId, false)
 
   // Get cuisine.
   // Replace this with watson to get intent and entity.
@@ -466,7 +474,7 @@ function sendRestaurantMessage(recipientId, messageText) {
 }
 
 function sendMessageToUserFromYelpResult(recipientId) {
-  checkUserInGlobalContext(recipientId)
+  checkUserInGlobalContext(recipientId, false)
 
   var preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
   var location_lat = global_context[recipientId]['location_lat'];
@@ -536,7 +544,7 @@ function(err, result) {
  *
  */
 function sendLocationMessage(senderID, messageAttachments) {
-  checkUserInGlobalContext(senderID);
+  checkUserInGlobalContext(senderID, false);
 
   var location_lat = messageAttachments[0].payload.coordinates.lat;
   var location_long = messageAttachments[0].payload.coordinates.long;
@@ -553,10 +561,6 @@ function sendLocationMessage(senderID, messageAttachments) {
 	  }
 	  return;
   }
-
-  console.log("location lat and long:");
-  console.log(location_lat);
-  console.log(location_long);
 
   var locationMessageText = "What kind of food would you like?";
 
