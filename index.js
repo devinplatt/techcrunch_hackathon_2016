@@ -525,10 +525,10 @@ function sendLocationMessage(senderID, messageAttachments) {
   if (preferred_cuisine != "") {
 	  if (time != "") {
 		  sendMessageToUserFromYelpResult(senderID);
-		  return;
 	  } else {
 		  sendAskForTimeMessage(senderID);
 	  }
+	  return;
   }
 
   console.log("location lat and long:");
