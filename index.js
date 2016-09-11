@@ -406,19 +406,57 @@ function receivedAccountLink(event) {
 }
 
 /*
- * Send a text message using the Send API.
+ * Send a Restaurant message using the Send API.
+ *
+ */
+function getCuisineType(messageText) {
+
+  var cuisine_list = ["mexican"];
+  var cuisine_type = false;
+  var normalized_messageText = messageText.toLowerCase();
+
+  for (cuisine in cuisine_list) {
+    if (normalized_messageText.indexOf(substring) !== -1) {
+      cuisine_type = cuisine;
+    }
+  }
+
+  return cuisine_type;
+}
+
+/*
+ * Process the user's message text to find restaurant
+ * request information.
+ *
+ */
+function processMessageForRestaurant(recipientId, messageText) {
+
+  // do processing of messageText?
+  var cuisine = getCuisineType(messageText);
+  if (cuisine) {
+    restaurantMessageText = "The cuisine is " + cuisine;
+  } else {
+    restaurantMessageText = "No cuisine specified.";
+  }
+
+  return restaurantMessageText;
+}
+
+/*
+ * Send a Restaurant message using the Send API.
  *
  */
 function sendRestaurantMessage(recipientId, messageText) {
 
-  // do processing of messageText?
+  var restaurantMessageText = processMessageForRestaurant(recipientId,
+                                                          messageText);
 
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: "This is a restaurant recommendation",
+      text: restaurantMessageText,
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
