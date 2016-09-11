@@ -19,7 +19,8 @@ const
   request = require('request'),
   n = require('nonce')(),
   oauthSignature = require("oauth-signature"),
-  qs = require("qs");
+  qs = require("qs"),
+  async = require("async");
 
 var yelpConsumerKey = process.env.YELP_CONSUMER_KEY;
 var yelpConsumerSecret = process.env.YELP_CONSUMER_SECRET;
@@ -350,19 +351,25 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var output_text = "Hi there! What would you like me to pick you today? (eg. \"Pick me a mexican restaurant\").";
+	request(url, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			body = JSON.parse(body);
+			var first_name = body.first_name;
+			var output_text = "Hi "+first_name+"! What would you like me to pick you today? (eg. \"Pick me a mexican restaurant\").";
 
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: output_text,
-      metadata: "DEVELOPER_DEFINED_METADATA"
-    }
-  };
+		    var messageData = {
+		      recipient: {
+		        id: recipientId
+		      },
+		      message: {
+		        text: output_text,
+		        metadata: "DEVELOPER_DEFINED_METADATA"
+		      }
+		    };
 
-  callSendAPI(messageData);
+		    callSendAPI(messageData);
+		}
+	}
 }
 
 /*
@@ -590,8 +597,6 @@ function sendMessageToUserFromYelpResult(recipientId) {
 			metadata: "DEVELOPER_DEFINED_METADATA"
 		  }
 		};
-	   callSendAPI(messageData);
-
     var mapMessageData = {
       recipient: {
         id: recipientId
@@ -612,9 +617,24 @@ function sendMessageToUserFromYelpResult(recipientId) {
           }
       }
     };
-    callSendAPI(mapMessageData);
 
-	sendBookingTimeMessage(recipientId);
+	async.series([
+		function(cb) {
+			callSendAPI(messageData);
+			cb(null);
+		},
+		function(cb) {
+			callSendAPI(mapMessageData);
+			cb(null);
+		},
+		function(cb) {
+			sendBookingTimeMessage(recipientId);
+			cb(null);
+		}
+	],
+function(err, result) {
+	console.log("Done sending responses");
+});
   });
 }
 
