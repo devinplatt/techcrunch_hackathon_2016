@@ -327,24 +327,29 @@ function receivedPostback(event) {
 	}
 
 	if (payload == "7:45" || payload == "8:45" || payload == "9:30") {
-		var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
-		request(url, function(error, response, body) {
-			if (!error && response.statusCode == 200) {
-				body = JSON.parse(body);
-				var messageData = {
-				  recipient: {
-					id: senderID
-				  },
-				  message: {
-					text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".\nOh, by the way, you earned a 10% discount by booking with PickMe. Enjoy!",
-					metadata: "DEVELOPER_DEFINED_METADATA"
-				  }
-				};
-			   callSendAPI(messageData);
-			}
-		});
+		setTimeout(wait2seconds(payload, senderID), 2000);
+
 	}
 
+}
+
+function wait2seconds(payload, senderID) {
+	var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
+	request(url, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			body = JSON.parse(body);
+			var messageData = {
+			  recipient: {
+				id: senderID
+			  },
+			  message: {
+				text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".\nOh, by the way, you earned a 10% discount by booking with PickMe. Enjoy!",
+				metadata: "DEVELOPER_DEFINED_METADATA"
+			  }
+			};
+		   callSendAPI(messageData);
+		}
+	});
 }
 
 function receivedMessageRead(event) {
