@@ -796,11 +796,11 @@ function sendButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Now",
-            payload: "DEVELOPED_DEFINED_PAYLOAD"
+            payload: setTime('now')
           }, {
             type: "postback",
             title: "Tonight",
-            payload: "DEVELOPED_DEFINED_PAYLOAD"
+            payload: setTime('tonight')
           }]
         }
       }
@@ -814,6 +814,11 @@ function sendButtonMessage(recipientId) {
  * Send a Structured Message (Generic Message type) using the Send API.
  *
  */
+
+function setTime(time) {
+  global_context[recipientId]['time'] = time;
+}
+
 function sendGenericMessage(recipientId) {
   var messageData = {
     recipient: {
