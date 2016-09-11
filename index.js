@@ -348,7 +348,7 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var output_text = "Hi Devin! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
+  var output_text = "Hi Devin! What would you like me to pick you today? (eg. \"Pick me a mexican restaurant\").";
    
   var messageData = {
     recipient: {
@@ -410,7 +410,7 @@ function receivedPostback(event) {
 
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
-  sendHiMessage(senderID);
+  // sendHiMessage(senderID);
 }
 
 /*
