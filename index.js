@@ -671,6 +671,8 @@ function sendLocationMessage(senderID, messageAttachments) {
 
 
 function sendAskForTimeMessage(recipientId) {
+	console.log("TEST SENDASKMESSAGE");
+
   var messageData = {
     recipient: {
       id: recipientId
