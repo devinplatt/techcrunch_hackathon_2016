@@ -369,7 +369,7 @@ function sendHiMessage (recipientId) {
 
 		    callSendAPI(messageData);
 		}
-	}
+	})
 }
 
 /*
