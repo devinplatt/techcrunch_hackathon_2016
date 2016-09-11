@@ -456,7 +456,8 @@ function checkUserInGlobalContext(recipientId) {
     global_context[recipientId] = {
       preferred_cuisine: "",
       location_lat: "",
-      location_long: ""
+      location_long: "",
+      time_resa: ""
     };
   }
 }
