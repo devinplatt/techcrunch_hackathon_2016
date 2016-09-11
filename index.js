@@ -336,11 +336,21 @@ function receivedPostback(event) {
 					id: senderID
 				  },
 				  message: {
-					text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+". Enjoy!",
+					text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".",
 					metadata: "DEVELOPER_DEFINED_METADATA"
 				  }
 				};
 			   callSendAPI(messageData);
+
+			  callSendAPI({
+				recipient: {
+				  id: senderID
+				},
+				message: {
+				  text: "Oh, by the way, a 10% discount will be coming with the check if you just say 'PickMe' to your waiter. Enjoy!",
+				  metadata: "DEVELOPER_DEFINED_METADATA"
+				}
+			  });
 			}
 		});
 	}
@@ -612,8 +622,6 @@ function sendAskForTimeMessage(recipientId) {
 
 
 function sendBookingTimeMessage(recipientId) {
-console.log("\nSENDING BOOKING TIMES\n");
-
   var messageData = {
     recipient: {
       id: recipientId
