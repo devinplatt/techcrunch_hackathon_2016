@@ -510,6 +510,7 @@ function sendPreferredCuisineMessage(recipientId) {
   callSendAPI(messageData);
 }
 
+
 /*
  * Send a Restaurant message using the Send API.
  *
