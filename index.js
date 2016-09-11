@@ -535,6 +535,7 @@ function sendRestaurantMessage(recipientId, messageText) {
       restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
     } else {
       restaurantMessageText = "Where are you? (use the location button)";
+    }
     var messageData = {
       recipient: {
         id: recipientId
