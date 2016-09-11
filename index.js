@@ -348,7 +348,7 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var output_text = "Hi " + userName + "! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
+  var output_text = "Hi Devin! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
    
   var messageData = {
     recipient: {
