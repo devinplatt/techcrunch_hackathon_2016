@@ -467,7 +467,7 @@ function sendPreferredCuisineMessage(recipientId) {
   var output_text = "No preferred cuisine specified";
 
   checkUserInGlobalContext(recipientId)
-  preferred_cuisine = global_context[recipientId]['preferred_cuisine']
+  var preferred_cuisine = global_context[recipientId]['preferred_cuisine']
   if (preferred_cuisine != "") {
     output_text = "Preferred cuisine is " + preferred_cuisine;
   }
@@ -525,9 +525,9 @@ function sendRestaurantMessage(recipientId, messageText) {
 function sendMessageToUserFromYelpResult(recipientId) {
   checkUserInGlobalContext(recipientId)
 
-  preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
-  location_lat = global_context[recipientId]['location_lat'];
-  location_long = global_context[recipientId]['location_long'];
+  var preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
+  var location_lat = global_context[recipientId]['location_lat'];
+  var location_long = global_context[recipientId]['location_long'];
 	yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
 		var messageData = {
 		  recipient: {
@@ -593,12 +593,12 @@ function sendMessageToUserFromYelpResult(recipientId) {
 function sendLocationMessage(senderID, messageAttachments) {
   checkUserInGlobalContext(senderID);
 
-  location_lat = messageAttachments[0].payload.coordinates.lat;
-  location_long = messageAttachments[0].payload.coordinates.long;
+  var location_lat = messageAttachments[0].payload.coordinates.lat;
+  var location_long = messageAttachments[0].payload.coordinates.long;
   global_context[senderID]['location_lat']  = location_lat;
   global_context[senderID]['location_long'] = location_long;
 
-  preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
+  var preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
   if (preferred_cuisine != "") {
 	  sendMessageToUserFromYelpResult(senderID);
 	  return;
