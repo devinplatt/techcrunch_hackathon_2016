@@ -517,6 +517,26 @@ function sendMessageToUserFromYelpResult(recipientId) {
 		  }
 		};
 	  callSendAPI(messageData);
+
+    // result. : name, image, phone, street, city, 
+    // crossroad (may be empty), latitude, longitude, is_closed (true/false)
+    console.log('image')
+    console.log(result.image)
+    var imageMessageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "image",
+        payload: {
+          url: result.image
+        }
+      }
+    }
+  };
+  callSendAPI(imageMessageData);
+
 	});
 }
 
