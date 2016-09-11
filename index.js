@@ -522,7 +522,7 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   var have_cuisine = (global_context[recipientId]['preferred_cuisine'] != "");
   var have_location = (global_context[recipientId]['location_lat'] != "");
-  var have_time = (global_context[recipientId]['preferred_cuisine'] != "");
+  var have_time = (global_context[recipientId]['time'] != "");
 
   var restaurantMessageText = "";
 
