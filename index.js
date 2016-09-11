@@ -348,21 +348,19 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var userName = getUserName(recipientId, function() {
-    var output_text = "Hi " + userName + " ! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
-     
-    var messageData = {
-      recipient: {
-        id: recipientId
-      },
-      message: {
-        text: output_text,
-        metadata: "DEVELOPER_DEFINED_METADATA"
-      }
-    };
+  var output_text = "Hi " + userName + " ! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
+   
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: output_text,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
 
-    callSendAPI(messageData);
-  });
+  callSendAPI(messageData);
 }
 
 /*
@@ -524,18 +522,20 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   var have_cuisine = (global_context[recipientId]['preferred_cuisine'] != "");
   var have_location = (global_context[recipientId]['location_lat'] != "");
+  var have_time = (global_context[recipientId]['preferred_cuisine'] != "");
 
   var restaurantMessageText = "";
 
-  if (have_cuisine && have_location) {
+  if (have_cuisine && have_location && have_time) {
 	  sendMessageToUserFromYelpResult(recipientId);
+  } else if (!have_time) {
+    sendButtonMessage(recipientId);
   } else {
-	if (have_location) {
+    if (have_location) {
       restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
     } else {
       restaurantMessageText = "Where are you? (use the location button)";
-    }
-	var messageData = {
+    var messageData = {
       recipient: {
         id: recipientId
       },
@@ -544,8 +544,8 @@ function sendRestaurantMessage(recipientId, messageText) {
         metadata: "DEVELOPER_DEFINED_METADATA"
       }
     };
-	callSendAPI(messageData);
   }
+  callSendAPI(messageData);
 }
 
 function sendMessageToUserFromYelpResult(recipientId) {
@@ -791,19 +791,15 @@ function sendButtonMessage(recipientId) {
         type: "template",
         payload: {
           template_type: "button",
-          text: "This is test text",
+          text: "When do you want to go there ?",
           buttons:[{
-            type: "web_url",
-            url: "https://www.oculus.com/en-us/rift/",
-            title: "Open Web URL"
-          }, {
             type: "postback",
-            title: "Trigger Postback",
+            title: "Now",
             payload: "DEVELOPED_DEFINED_PAYLOAD"
           }, {
-            type: "phone_number",
-            title: "Call Phone Number",
-            payload: "+16505551234"
+            type: "postback",
+            title: "Tonight",
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
           }]
         }
       }
@@ -1072,21 +1068,6 @@ function callSendAPI(messageData) {
     }
   });
 }
-
-function getUserName(recipientId, callback) {
-  request('https://graph.facebook.com/v2.6/' + recipientId + '?access_token=' + PAGE_ACCESS_TOKEN, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      return (JSON.parse(body).first_name);
-    }
-    else {
-      console.log(error);
-    }
-  })
-  callback();
-}
-
-
-
 
 var yelpMakeQuery = function(term, type, location, radius, callback) {
 	var httpMethod = 'GET';
