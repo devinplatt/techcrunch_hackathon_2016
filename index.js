@@ -234,14 +234,17 @@ function receivedMessage(event) {
         break;
 
 	case 'get started':
+	console.log("first GETSTARTED");
 	  sendHiMessage(senderID);
 	  break;
 
 	  case 'Get started':
+	  console.log("second GETSTARTED");
 	  sendHiMessage(senderID);
 	  break;
 
   case 'Get Started':
+  console.log("third GETSTARTED");
   sendHiMessage(senderID);
   break;
 
@@ -312,6 +315,10 @@ function receivedPostback(event) {
 
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
+
+	if (payload == "USER_DEFINED_PAYLOAD") {
+		sendHiMessage(senderID);
+	}
 
 	if (payload == "WHATTIME_TONIGHT") {
 		global_context[senderID]['time'] = "Tonight";
