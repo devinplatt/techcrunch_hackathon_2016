@@ -533,7 +533,9 @@ function sendRestaurantMessage(recipientId, messageText) {
   if (have_cuisine && have_location && have_time) {
 	  sendMessageToUserFromYelpResult(recipientId);
   } else {
-    if (!have_cuisine || !have_location) {
+    if (!have_time) {
+      sendButtonMessage(recipientId);
+    } else if (!have_cuisine || !have_location) {
       if (!have_cuisine) {
         restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
       } else if (!have_location) {
@@ -549,9 +551,7 @@ function sendRestaurantMessage(recipientId, messageText) {
         }
       };
       callSendAPI(messageData);
-    } else {
-      sendButtonMessage(recipientId);
-    }
+    } 
   }
 }
 
