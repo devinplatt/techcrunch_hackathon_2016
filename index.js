@@ -598,7 +598,7 @@ function sendLocationMessage(senderID, messageAttachments) {
   global_context[senderID]['location_lat']  = location_lat;
   global_context[senderID]['location_long'] = location_long;
 
-  var preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
+  var preferred_cuisine = global_context[senderID]['preferred_cuisine'];
   if (preferred_cuisine != "") {
 	  sendMessageToUserFromYelpResult(senderID);
 	  return;
