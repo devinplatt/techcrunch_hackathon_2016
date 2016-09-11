@@ -485,18 +485,7 @@ function sendRestaurantMessage(recipientId, messageText) {
   var restaurantMessageText = "";
 
   if (have_cuisine && have_location) {
-	  yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
-		  var messageData = {
-	        recipient: {
-	          id: recipientId
-	        },
-	        message: {
-	          text: result.name,
-	          metadata: "DEVELOPER_DEFINED_METADATA"
-	        }
-	      };
-	  	callSendAPI(messageData);
-	  });
+	  sendMessageToUserFromYelpResult(recipientId);
   } else {
 	if (have_location) {
       restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
@@ -516,6 +505,21 @@ function sendRestaurantMessage(recipientId, messageText) {
   }
 }
 
+function sendMessageToUserFromYelpResult(recipientId) {
+	yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
+		var messageData = {
+		  recipient: {
+			id: recipientId
+		  },
+		  message: {
+			text: result.name,
+			metadata: "DEVELOPER_DEFINED_METADATA"
+		  }
+		};
+	  callSendAPI(messageData);
+	});
+}
+
 /*
  * Send get the GPS location and send a confirmation via the Send API.
  *
@@ -524,11 +528,16 @@ function sendLocationMessage(senderID, messageAttachments) {
   location_lat = messageAttachments[0].payload.coordinates.lat;
   location_long = messageAttachments[0].payload.coordinates.long;
 
+  if (preferred_cuisine != "") {
+	  sendMessageToUserFromYelpResult(senderID);
+	  return;
+  }
+
   console.log("location lat and long:");
   console.log(location_lat);
   console.log(location_long);
 
-  var locationMessageText = "Got your location!";
+  var locationMessageText = "What kind of food would you like?";
 
   var messageData = {
     recipient: {
@@ -1000,16 +1009,13 @@ var yelpMakeQuery = function(term, type, location, radius, callback) {
 	var paramUrl = qs.stringify(parameters);
 	var queryUrl = url + "?" + paramUrl;
 
-
-console.log(parameters);
-
 	request(queryUrl, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			yelpParseResponseBody(JSON.parse(body), function(result) {
 				callback(yelpReturnFormattedResult(result));
 			});
 		} else {
-			console.log(response);
+			console.log("Error getting response from Yelp");
 		}
 	});
 };
