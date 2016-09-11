@@ -411,12 +411,16 @@ function receivedAccountLink(event) {
  */
 function getCuisineType(messageText) {
 
-  var cuisine_list = ["mexican"];
+  var cuisine_list = ["mexican", 'italian', 'chinese', 'korean',
+  'japanese', 'american', 'french', 'german', 'sushi', 'indian', 'thai',
+  'russian', 'south african'];
   var cuisine_type = false;
   var normalized_messageText = messageText.toLowerCase();
 
-  for (var cuisine in cuisine_list) {
-    if (normalized_messageText.indexOf(substring) !== -1) {
+  for (var i = 0; i < cuisine_list.length; i++) {
+    var cuisine = cuisine_list[i]
+    console.log(cuisine)
+    if (normalized_messageText.indexOf(cuisine) !== -1) {
       cuisine_type = cuisine;
     }
   }
