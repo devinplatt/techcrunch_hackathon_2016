@@ -320,7 +320,7 @@ function receivedMessage(event) {
         sendRestaurantMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
-    if (messageAttachments[0].payload.hasOwnProperty('coordinates')) {
+    if (messageAttachments[0].payload != null && messageAttachments[0].payload.hasOwnProperty('coordinates')) {
       sendLocationMessage(senderID, messageAttachments);
     } else {
       sendTextMessage(senderID, "Message with attachment received");
