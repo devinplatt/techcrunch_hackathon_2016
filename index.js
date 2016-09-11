@@ -348,7 +348,7 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientID) {
-  output_text = "Hi there. Send us a request , like \"Pick me a mexican restaurant\".";
+  var output_text = "Hi there. Send us a request , like \"Pick me a mexican restaurant\".";
    
   var messageData = {
     recipient: {
