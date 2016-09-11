@@ -325,6 +325,14 @@ function receivedMessage(event) {
         sendPreferredCuisineMessage(senderID);
         break;
 
+      case 'hi':
+        sendHiMessage(senderID);
+        break;
+
+      case 'Hi':
+        sendHiMessage(senderID);
+        break;
+
       default:
         // sendTextMessage(senderID, messageText);
         sendRestaurantMessage(senderID, messageText);
@@ -338,6 +346,22 @@ function receivedMessage(event) {
   }
 }
 
+
+function sendHiMessage (recipientID) {
+  output_text = "Hi there. Send us a request , like \"Pick me a mexican restaurant\".";
+   
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: output_text,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
 
 /*
  * Delivery Confirmation Event
