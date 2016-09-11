@@ -800,11 +800,11 @@ function sendButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Now",
-            payload: setTime('now')
+            payload: setTime(recipientId, 'now')
           }, {
             type: "postback",
             title: "Tonight",
-            payload: setTime('tonight')
+            payload: setTime(recipientId, 'tonight')
           }]
         }
       }
@@ -819,7 +819,7 @@ function sendButtonMessage(recipientId) {
  *
  */
 
-function setTime(time) {
+function setTime(recipientId, time) {
   global_context[recipientId]['time_resa'] = time;
 }
 
