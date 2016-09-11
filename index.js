@@ -512,7 +512,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
 			id: recipientId
 		  },
 		  message: {
-			text: "I highly recommend this place. It has great " + preferred_cuisine " food.",
+			text: "I highly recommend this place. It has great " + preferred_cuisine + " food.",
 			metadata: "DEVELOPER_DEFINED_METADATA"
 		  }
 		};
