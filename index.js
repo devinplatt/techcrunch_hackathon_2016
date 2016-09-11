@@ -233,6 +233,12 @@ function receivedMessage(event) {
         sendHiMessage(senderID);
         break;
 
+	case 'get started':
+	  sendHiMessage(senderID);
+	  break;
+case 'Get started':
+  sendHiMessage(senderID);
+  break;
       default:
         sendRestaurantMessage(senderID, messageText);
     }
