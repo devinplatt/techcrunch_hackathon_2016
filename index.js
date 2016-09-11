@@ -535,6 +535,7 @@ function sendRestaurantMessage(recipientId, messageText) {
   } else {
     if (!have_time) {
       sendButtonMessage(recipientId);
+      global_context[recipientId]['time_resa'] = "set";
     } else if (!have_cuisine || !have_location) {
       if (!have_cuisine) {
         restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
