@@ -555,6 +555,7 @@ function sendRestaurantMessage(recipientId, messageText) {
   }
 }
 
+
 function sendMessageToUserFromYelpResult(recipientId) {
   checkUserInGlobalContext(recipientId)
 
