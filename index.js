@@ -525,21 +525,43 @@ function sendMessageToUserFromYelpResult(recipientId) {
     large_image = result.image.replace('ms.jpg', 'ls.jpg')
     console.log(large_image);
     var imageMessageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "image",
-        payload: {
-          url: large_image
+      recipient: {
+        id: recipientId
+      },
+      message: {
+        attachment: {
+          type: "image",
+          payload: {
+            url: large_image
+          }
         }
       }
-    }
-  };
-  callSendAPI(imageMessageData);
+    };
+    callSendAPI(imageMessageData);
 
-	});
+    // http://stackoverflow.com/questions/38017382/how-to-send-location-from-facebook-messenger-platform
+    var mapMessageData = {
+      recipient: {
+        id: recipientId
+      },
+      message: {
+          attachment: {
+              type: "template",
+              payload: {
+                  template_type: "generic",
+                  elements: {
+                      element: {
+                          title: "Restaurant location",
+                          image_url: "https:\/\/maps.googleapis.com\/maps\/api\/staticmap?size=764x400&center="+result.latitude+","+result.longitude+"&zoom=25&markers="+result.latitude+","+esult.longitude,
+                          item_url: "http:\/\/maps.apple.com\/maps?q="+result.latitude+","+result.longitude+"&z=16"
+                      }
+                  }
+              }
+          }
+      }
+    };
+    callSendAPI(mapMessageData);
+  });
 }
 
 /*
