@@ -236,9 +236,15 @@ function receivedMessage(event) {
 	case 'get started':
 	  sendHiMessage(senderID);
 	  break;
-case 'Get started':
+
+	  case 'Get started':
+	  sendHiMessage(senderID);
+	  break;
+
+  case 'Get Started':
   sendHiMessage(senderID);
   break;
+
       default:
         sendRestaurantMessage(senderID, messageText);
     }
@@ -253,7 +259,7 @@ case 'Get started':
 
 
 function sendHiMessage (recipientId) {
-	console.log("SENDING HI MESSAGE ALL GOOD");
+	checkUserInGlobalContext(recipientId);
 	var url = "https://graph.facebook.com/v2.6/"+recipientId+"?access_token="+PAGE_ACCESS_TOKEN;
 	request(url, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
