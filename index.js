@@ -399,6 +399,7 @@ function receivedDeliveryConfirmation(event) {
  *
  */
 function receivedPostback(event) {
+	console.log(event.postback);
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfPostback = event.timestamp;
@@ -671,8 +672,6 @@ function sendLocationMessage(senderID, messageAttachments) {
 
 
 function sendAskForTimeMessage(recipientId) {
-	console.log("TEST SENDASKMESSAGE");
-
   var messageData = {
     recipient: {
       id: recipientId
