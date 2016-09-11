@@ -1075,7 +1075,8 @@ function callSendAPI(messageData) {
 function getUserName(recipientId) {
   request('https://graph.facebook.com/v2.6/' + recipientId + '?access_token=' + PAGE_ACCESS_TOKEN, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      return (body.first_name);
+      console.log(typeof body);
+      return (JSON.parse(body).first_name);
     }
     else {
       console.log(error);
