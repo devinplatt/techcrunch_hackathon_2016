@@ -321,6 +321,10 @@ function receivedPostback(event) {
 		global_context[senderID]['time'] = "Tonight";
 		sendRestaurantMessage(senderID, "Tonight");
 	}
+	if (payload == "WHATTIME_NOW") {
+		global_context[senderID]['time'] = "Now";
+		sendRestaurantMessage(senderID, "Now");
+	}
 
 	if (payload == "7:45" || payload == "8:45" || payload == "9:30") {
 		var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
@@ -438,7 +442,7 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   if (have_cuisine && have_location) {
 	  if (have_time) {
-		 sendMessageToUserFromYelpResult(recipientId);
+		 sendMessageToUserFromYelpResult(recipientId, messageText);
 	 } else {
 		 sendAskForTimeMessage(recipientId);
 	 }
@@ -461,7 +465,7 @@ function sendRestaurantMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-function sendMessageToUserFromYelpResult(recipientId) {
+function sendMessageToUserFromYelpResult(recipientId, time) {
   checkUserInGlobalContext(recipientId)
 
   var preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
@@ -509,7 +513,20 @@ function sendMessageToUserFromYelpResult(recipientId) {
 		}
 	],
 function(err, result) {
-	sendBookingTimeMessage(recipientId);
+	if (time && time == "Tonight") {
+		sendBookingTimeMessage(recipientId);
+	} else {
+		var message = {
+		  recipient: {
+			id: senderID
+		  },
+		  message: {
+			text: "We just booked a table for you in 15 minutes. Enjoy!",
+			metadata: "DEVELOPER_DEFINED_METADATA"
+		  }
+		};
+	   callSendAPI(messageData);
+	}
 });
   });
 }
