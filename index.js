@@ -290,6 +290,7 @@ function receivedMessage(event) {
         break;
 
       case 'button':
+	  console.log("TEST BUTTON");
         sendButtonMessage(senderID);
         break;
 
@@ -349,7 +350,7 @@ function receivedMessage(event) {
 
 function sendHiMessage (recipientId) {
   var output_text = "Hi there! What would you like me to pick you today? (eg. \"Pick me a mexican restaurant\").";
-   
+
   var messageData = {
     recipient: {
       id: recipientId
@@ -565,7 +566,7 @@ function sendMessageToUserFromYelpResult(recipientId) {
 		};
 	   callSendAPI(messageData);
 
-  //   // result. : name, image, phone, street, city, 
+  //   // result. : name, image, phone, street, city,
   //   // crossroad (may be empty), latitude, longitude, is_closed (true/false)
   //   console.log('image');
   //   console.log(result.image);
