@@ -621,7 +621,7 @@ function sendBookingTimeMessage(recipientId) {
 			type: "template",
 			payload: {
 				template_type: "button",
-				text: "Ok, those times are available for booking, would look like me to do it for you?",
+				text: "Those times are available for booking, would look like me to do it for you?",
 				buttons:[{
 					type: "postback",
 					title: "7:45",
