@@ -518,7 +518,7 @@ function(err, result) {
 	} else {
 		var message = {
 		  recipient: {
-			id: senderID
+			id: recipientId
 		  },
 		  message: {
 			text: "We just booked a table for you in 15 minutes. Enjoy!",
