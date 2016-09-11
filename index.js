@@ -327,13 +327,6 @@ function receivedPostback(event) {
 	}
 
 	if (payload == "7:45" || payload == "8:45" || payload == "9:30") {
-		setTimeout(wait2seconds(payload, senderID), 2000);
-
-	}
-
-}
-
-function wait2seconds(payload, senderID) {
 	var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
 	request(url, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
@@ -350,6 +343,8 @@ function wait2seconds(payload, senderID) {
 		   callSendAPI(messageData);
 		}
 	});
+	}
+
 }
 
 function receivedMessageRead(event) {
