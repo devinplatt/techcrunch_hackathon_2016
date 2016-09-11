@@ -412,7 +412,7 @@ function receivedPostback(event) {
 		global_context[senderID]['time'] = "Tonight";
 	}
 
-	sendRestaurantMessage(senderID, messageText)
+	sendRestaurantMessage(senderID, "Tonight");
 
 }
 
