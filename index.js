@@ -413,8 +413,24 @@ function receivedPostback(event) {
 		sendRestaurantMessage(senderID, "Tonight");
 	}
 
-	if (payload == "8:30") {
-		console.log("GOOD !!")
+	if (payload == "8:45") {
+		var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
+		request(url, function(error, response, body) {
+			if (!error && response.statusCode == 200) {
+				body = JSON.parse(body);
+				console.log(body.first_name);
+				var messageData = {
+				  recipient: {
+					id: senderID
+				  },
+				  message: {
+					text: "Ok .",
+					metadata: "DEVELOPER_DEFINED_METADATA"
+				  }
+				};
+			   callSendAPI(messageData);
+			}
+		});
 	}
 
 }
@@ -686,73 +702,39 @@ function sendAskForTimeMessage(recipientId) {
 function sendBookingTimeMessage(recipientId) {
 console.log("\nSENDING BOOKING TIMES\n");
 
-//   var messageData = {
-//     recipient: {
-//       id: recipientId
-//     },
-//     message: {
-// 		attachment: {
-// 			type: "template",
-// 			payload: {
-// 				template_type: "button",
-// 				text: "Ok, those times are available for booking, would look like me to do it for you?",
-// 				buttons:[{
-// 					type: "postback",
-// 					title: "7:15",
-// 					payload: "7:15"
-// 				}, {
-// 					type: "postback",
-// 					title: "7:30",
-// 					payload: "7:30"
-// 				},
-// 				{
-// 					type: "postback",
-// 					title: "7:45",
-// 					payload: "7:45"
-// 				},
-// 				{
-// 					type: "postback",
-// 					title: "8:45",
-// 					payload: "8:45"
-// 				},
-// 				{
-// 					type: "postback",
-// 					title: "9:30",
-// 					payload: "9:30"
-// 				}
-// 			]
-// 		}
-// 	}
-// }
-// };
-//
-// callSendAPI(messageData);
-
-var messageData = {
-  recipient: {
-	id: recipientId
-  },
-  message: {
-	attachment: {
-	  type: "template",
-	  payload: {
-		template_type: "button",
-		text: "test?",
-		buttons:[{
-		  type: "postback",
-		  title: "7:30",
-		  payload: "7:30"
-		}, {
-		  type: "postback",
-		  title: "8:30",
-		  payload: "8:30"
-		}]
-	  }
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+		attachment: {
+			type: "template",
+			payload: {
+				template_type: "button",
+				text: "Ok, those times are available for booking, would look like me to do it for you?",
+				buttons:[{
+					type: "postback",
+					title: "7:45",
+					payload: "7:45"
+				},
+				{
+					type: "postback",
+					title: "8:45",
+					payload: "8:45"
+				},
+				{
+					type: "postback",
+					title: "9:30",
+					payload: "9:30"
+				}
+			]
+		}
 	}
-  }
+}
 };
 
 callSendAPI(messageData);
+
 }
 
 
