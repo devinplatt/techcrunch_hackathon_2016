@@ -526,7 +526,7 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   var restaurantMessageText = "";
 
-  if (have_cuisine && have_location && have_time) {
+  if (have_cuisine && have_location) {
 	  sendMessageToUserFromYelpResult(recipientId);
   } else {
     if (have_location) {
