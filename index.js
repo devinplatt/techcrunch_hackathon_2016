@@ -404,16 +404,15 @@ function receivedPostback(event) {
   var recipientID = event.recipient.id;
   var timeOfPostback = event.timestamp;
 
-  // The 'payload' param is a developer-defined field which is set in a postback
-  // button for Structured Messages.
   var payload = event.postback.payload;
 
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
-  // When a postback is called, we'll send a message back to the sender to
-  // let them know it was successful
-  sendHiMessage(senderID);
+	if (payload == "WHATTIME_TONIGHT") {
+		global_context[senderID]['time'] = "Tonight";
+	}
+
 }
 
 
@@ -685,11 +684,11 @@ function sendAskForTimeMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Now",
-            payload: "DEVELOPED_DEFINED_PAYLOAD"
+            payload: "WHATTIME_NOW"
           }, {
             type: "postback",
             title: "Tonight",
-            payload: "DEVELOPED_DEFINED_PAYLOAD"
+            payload: "WHATTIME_TONIGHT"
           }]
         }
       }
