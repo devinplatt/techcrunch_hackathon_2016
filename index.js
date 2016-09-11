@@ -532,24 +532,26 @@ function sendRestaurantMessage(recipientId, messageText) {
   console.log(have_location);
   if (have_cuisine && have_location && have_time) {
 	  sendMessageToUserFromYelpResult(recipientId);
-  } else if (!have_cuisine || !have_location) {
-    if (!have_cuisine) {
-      restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
-    } else if (!have_location) {
-      restaurantMessageText = "Where are you? (use the location button)";
-    }
-    var messageData = {
-      recipient: {
-        id: recipientId
-      },
-      message: {
-        text: restaurantMessageText,
-        metadata: "DEVELOPER_DEFINED_METADATA"
-      }
-    };
-    callSendAPI(messageData);
   } else {
-    sendButtonMessage(recipientId);
+    if (!have_cuisine || !have_location) {
+      if (!have_cuisine) {
+        restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
+      } else if (!have_location) {
+        restaurantMessageText = "Where are you? (use the location button)";
+      }
+      var messageData = {
+        recipient: {
+          id: recipientId
+        },
+        message: {
+          text: restaurantMessageText,
+          metadata: "DEVELOPER_DEFINED_METADATA"
+        }
+      };
+      callSendAPI(messageData);
+    } else {
+      sendButtonMessage(recipientId);
+    }
   }
 }
 
