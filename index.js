@@ -598,6 +598,20 @@ function sendMessageToUserFromYelpResult(recipientId) {
       }
     };
     callSendAPI(mapMessageData);
+
+
+
+	var messageData = {
+	  recipient: {
+		id: recipientId
+	  },
+	  message: {
+		text: "TEST TEST TEST",
+		metadata: "DEVELOPER_DEFINED_METADATA"
+	  }
+	};
+   callSendAPI(messageData);
+
 	sendBookingTimeMessage(recipientId);
   });
 }
