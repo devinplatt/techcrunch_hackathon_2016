@@ -543,7 +543,7 @@ function sendLocationMessage(senderID, messageAttachments) {
 
   var messageData = {
     recipient: {
-      id: recipientId
+      id: senderID
     },
     message: {
       text: locationMessageText,
