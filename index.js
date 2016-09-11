@@ -1001,13 +1001,16 @@ var yelpMakeQuery = function(term, type, location, radius, callback) {
 	var paramUrl = qs.stringify(parameters);
 	var queryUrl = url + "?" + paramUrl;
 
+
+console.log(parameters);
+
 	request(queryUrl, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			yelpParseResponseBody(JSON.parse(body), function(result) {
 				callback(yelpReturnFormattedResult(result));
 			});
 		} else {
-			console.log("ERROR");
+			console.log(response);
 		}
 	});
 };
