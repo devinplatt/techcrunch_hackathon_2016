@@ -348,7 +348,7 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-  var output_text = "Hi Devin! What would you like me to pick you today? (eg. \"Pick me a mexican restaurant\").";
+  var output_text = "Hi there! What would you like me to pick you today? (ex: \"Pick me a mexican restaurant\").";
    
   var messageData = {
     recipient: {
@@ -410,7 +410,7 @@ function receivedPostback(event) {
 
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
-  sendRestaurantMessage(recipientID, global_context[recipientId]['preferred_cuisine']);
+  sendHiMessage(senderID);
 }
 
 /*
@@ -456,8 +456,7 @@ function checkUserInGlobalContext(recipientId) {
     global_context[recipientId] = {
       preferred_cuisine: "",
       location_lat: "",
-      location_long: "",
-      time_resa: ""
+      location_long: ""
     };
   }
 }
@@ -510,7 +509,6 @@ function sendPreferredCuisineMessage(recipientId) {
   callSendAPI(messageData);
 }
 
-
 /*
  * Send a Restaurant message using the Send API.
  *
@@ -520,44 +518,34 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   // Get cuisine.
   // Replace this with watson to get intent and entity.
-  console.log(messageText);
   var cuisine = getCuisineType(recipientId, messageText);
 
   var have_cuisine = (global_context[recipientId]['preferred_cuisine'] != "");
   var have_location = (global_context[recipientId]['location_lat'] != "");
-  var have_time = (global_context[recipientId]['time_resa'] != "");
 
   var restaurantMessageText = "";
 
-  console.log(have_time);
-  console.log(have_cuisine);
-  console.log(have_location);
   if (have_cuisine && have_location && have_time) {
 	  sendMessageToUserFromYelpResult(recipientId);
+  } else if (!have_time) {
+    sendButtonMessage(recipientId);
   } else {
-    if (!have_time) {
-      sendButtonMessage(recipientId);
-      global_context[recipientId]['time_resa'] = "set";
-    } else if (!have_cuisine || !have_location) {
-      if (!have_cuisine) {
-        restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
-      } else if (!have_location) {
-        restaurantMessageText = "Where are you? (use the location button)";
+    if (have_location) {
+      restaurantMessageText = "What type of food would you like to eat? (eg. Mexican food).";
+    } else {
+      restaurantMessageText = "Where are you? (use the location button)";
+    var messageData = {
+      recipient: {
+        id: recipientId
+      },
+      message: {
+        text: restaurantMessageText,
+        metadata: "DEVELOPER_DEFINED_METADATA"
       }
-      var messageData = {
-        recipient: {
-          id: recipientId
-        },
-        message: {
-          text: restaurantMessageText,
-          metadata: "DEVELOPER_DEFINED_METADATA"
-        }
-      };
-      callSendAPI(messageData);
-    } 
+    };
   }
+  callSendAPI(messageData);
 }
-
 
 function sendMessageToUserFromYelpResult(recipientId) {
   checkUserInGlobalContext(recipientId)
@@ -806,11 +794,11 @@ function sendButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Now",
-            payload: "now"
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
           }, {
             type: "postback",
             title: "Tonight",
-            payload: "tonight"
+            payload: "DEVELOPED_DEFINED_PAYLOAD"
           }]
         }
       }
@@ -824,11 +812,6 @@ function sendButtonMessage(recipientId) {
  * Send a Structured Message (Generic Message type) using the Send API.
  *
  */
-
-function setTime(recipientId, time) {
-  global_context[recipientId]['time_resa'] = time;
-}
-
 function sendGenericMessage(recipientId) {
   var messageData = {
     recipient: {
