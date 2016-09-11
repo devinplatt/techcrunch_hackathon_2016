@@ -419,7 +419,6 @@ function getCuisineType(messageText) {
 
   for (var i = 0; i < cuisine_list.length; i++) {
     var cuisine = cuisine_list[i]
-    console.log(cuisine)
     if (normalized_messageText.indexOf(cuisine) !== -1) {
       cuisine_type = cuisine;
     }
@@ -437,10 +436,9 @@ function processMessageForRestaurant(recipientId, messageText) {
 
   // do processing of messageText?
   var cuisine = getCuisineType(messageText);
+  var restaurantMessageText = "No cuisine specified.";
   if (cuisine) {
     restaurantMessageText = "The cuisine is " + cuisine;
-  } else {
-    restaurantMessageText = "No cuisine specified.";
   }
 
   return restaurantMessageText;
