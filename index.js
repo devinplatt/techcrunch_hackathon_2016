@@ -26,9 +26,11 @@ var yelpConsumerSecret = process.env.YELP_CONSUMER_SECRET;
 var yelpToken = process.env.YELP_TOKEN;
 var yelpTokenSecret = process.env.YELP_TOKEN_SECRET;
 
-var preferred_cuisine = "";
-var location_lat = "";
-var location_long = "";
+// var preferred_cuisine = "";
+// var location_lat = "";
+// var location_long = "";
+
+var global_context = {};
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -425,11 +427,21 @@ function receivedAccountLink(event) {
     "and auth code %s ", senderID, status, authCode);
 }
 
+function checkUserInGlobalContext(recipientId) {
+  if (!(recipientId in global_context)) {
+    global_context[recipientId] = {
+      preferred_cuisine: "",
+      location_lat: "",
+      location_long: ""
+    };
+  }
+}
+
 /*
  * Send a Restaurant message using the Send API.
  *
  */
-function getCuisineType(messageText) {
+function getCuisineType(recipientId, messageText) {
 
   var cuisine_list = ["mexican", 'italian', 'chinese', 'korean',
   'japanese', 'american', 'french', 'german', 'sushi', 'indian', 'thai',
@@ -441,7 +453,9 @@ function getCuisineType(messageText) {
     var cuisine = cuisine_list[i]
     if (normalized_messageText.indexOf(cuisine) !== -1) {
       cuisine_type = cuisine;
-      preferred_cuisine = cuisine;
+      checkUserInGlobalContext(recipientId)
+      global_context[recipientId]['preferred_cuisine'] = cuisine;
+      // preferred_cuisine = cuisine;
     }
   }
 
@@ -452,6 +466,8 @@ function sendPreferredCuisineMessage(recipientId) {
 
   var output_text = "No preferred cuisine specified";
 
+  checkUserInGlobalContext(recipientId)
+  preferred_cuisine = global_context[recipientId]['preferred_cuisine']
   if (preferred_cuisine != "") {
     output_text = "Preferred cuisine is " + preferred_cuisine;
   }
@@ -474,13 +490,14 @@ function sendPreferredCuisineMessage(recipientId) {
  *
  */
 function sendRestaurantMessage(recipientId, messageText) {
+  checkUserInGlobalContext(recipientId)
 
   // Get cuisine.
   // Replace this with watson to get intent and entity.
-  var cuisine = getCuisineType(messageText);
+  var cuisine = getCuisineType(recipientId, messageText);
 
-  var have_cuisine = (preferred_cuisine != "");
-  var have_location = (location_lat != "");
+  var have_cuisine = (global_context[recipientId]['preferred_cuisine'] != "");
+  var have_location = (global_context[recipientId]['location_lat'] != "");
 
   var restaurantMessageText = "";
 
@@ -506,6 +523,11 @@ function sendRestaurantMessage(recipientId, messageText) {
 }
 
 function sendMessageToUserFromYelpResult(recipientId) {
+  checkUserInGlobalContext(recipientId)
+
+  preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
+  location_lat = global_context[recipientId]['location_lat'];
+  location_long = global_context[recipientId]['location_long'];
 	yelpMakeQuery("meat", preferred_cuisine, {lat: location_lat, long: location_long}, 10000, function(result) {
 		var messageData = {
 		  recipient: {
@@ -569,9 +591,14 @@ function sendMessageToUserFromYelpResult(recipientId) {
  *
  */
 function sendLocationMessage(senderID, messageAttachments) {
+  checkUserInGlobalContext(senderID);
+
   location_lat = messageAttachments[0].payload.coordinates.lat;
   location_long = messageAttachments[0].payload.coordinates.long;
+  global_context[senderID]['location_lat']  = location_lat;
+  global_context[senderID]['location_long'] = location_long;
 
+  preferred_cuisine = global_context[recipientId]['preferred_cuisine'];
   if (preferred_cuisine != "") {
 	  sendMessageToUserFromYelpResult(senderID);
 	  return;
