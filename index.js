@@ -526,6 +526,9 @@ function sendRestaurantMessage(recipientId, messageText) {
 
   var restaurantMessageText = "";
 
+  console.log(have_time);
+  console.log(have_cuisine);
+  console.log(have_location);
   if (have_cuisine && have_location && have_time) {
 	  sendMessageToUserFromYelpResult(recipientId);
   } else if (!have_time) {
