@@ -247,7 +247,8 @@ function receivedMessage(event) {
 
 
 function sendHiMessage (recipientId) {
-	var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
+	console.log("SENDING HI MESSAGE ALL GOOD");
+	var url = "https://graph.facebook.com/v2.6/"+recipientId+"?access_token="+PAGE_ACCESS_TOKEN;
 	request(url, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			body = JSON.parse(body);
