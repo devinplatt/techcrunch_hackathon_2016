@@ -18,6 +18,8 @@ const
   https = require('https'),  
   request = require('request');
 
+var preferred_cuisine = "";
+
 var app = express();
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
@@ -307,6 +309,10 @@ function receivedMessage(event) {
         sendAccountLinking(senderID);
         break;
 
+      case 'preferred cuisine':
+        sendPreferredCuisineMessage(senderID);
+        break;
+
       default:
         // sendTextMessage(senderID, messageText);
         sendRestaurantMessage(senderID, messageText);
@@ -439,9 +445,31 @@ function processMessageForRestaurant(recipientId, messageText) {
   var restaurantMessageText = "No cuisine specified.";
   if (cuisine) {
     restaurantMessageText = "The cuisine is " + cuisine;
+    preferred_cuisine = cuisine;
   }
 
   return restaurantMessageText;
+}
+
+function sendPreferredCuisineMessage(recipientId) {
+
+  var output_text = "No preferred cuisine specified";
+
+  if (preferred_cuisine != "") {
+    output_text = "Preferred cuisine is " + preferred_cuisine;
+  }
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: output_text,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
 }
 
 /*
