@@ -221,32 +221,8 @@ function receivedMessage(event) {
         sendAccountLinking(senderID);
         break;
 
-      case 'preferred cuisine':
-        sendPreferredCuisineMessage(senderID);
-        break;
-
-      case 'hi':
-        sendHiMessage(senderID);
-        break;
-
-      case 'Hi':
-        sendHiMessage(senderID);
-        break;
-
-	case 'get started':
-	  sendHiMessage(senderID);
-	  break;
-
-	  case 'Get started':
-	  sendHiMessage(senderID);
-	  break;
-
-  case 'Get Started':
-  sendHiMessage(senderID);
-  break;
-
       default:
-        sendRestaurantMessage(senderID, messageText);
+        respondToMessageText(senderID, messageText);
     }
   } else if (messageAttachments) {
     if (messageAttachments[0].payload != null && messageAttachments[0].payload.hasOwnProperty('coordinates')) {
@@ -257,9 +233,68 @@ function receivedMessage(event) {
   }
 }
 
+function respondToMessageText(recipientId, messageText) {
+  printDebugStatement(recipientId, "In function respondToMessageText()");
+  messageIntent = getMessageIntent(messageText)
+  if (messageIntent in ["HELLO", "GET_STARTED"]) {
+    sendHiMessage(recipientId);
+  } else if (messageIntent == "GET_PREFERRED_CUISINE") {
+    sendPreferredCuisineMessage(recipientId);
+  } else if (messageIntent == "DEBUG_ON") {
+    debugOn(recipientId);
+  } else if (messageIntent == "DEBUG_OFF") {
+    debugOff(recipientId);
+  } else if (messageIntent == "RESET") {
+    resetUserContext(recipientId);
+  } else if (messageIntent == 'RESTAURANT') {
+    sendRestaurantMessage(recipientId, messageText);
+  }
+}
+
+function debugOn(recipientId) {
+  checkUserInGlobalContext(recipientId, false);
+  global_context[recipientId]['debug'] = true;
+  printDebugStatement(recipientId, "Turning debug statements on");
+}
+
+function debugOff(recipientId) {
+  checkUserInGlobalContext(recipientId, false);
+  printDebugStatement(recipientId, "Turning debug statements off");
+  global_context[recipientId]['debug'] = false;
+}
+
+function resetUserContext(recipientId) {
+  checkUserInGlobalContext(recipientId, false);
+  printDebugStatement(recipientId, "Resetting user context");
+  checkUserInGlobalContext(recipientId, true);
+}
+
+function getMessageIntent(recipientId, messageText) {
+  checkUserInGlobalContext(recipientId, false);
+  printDebugStatement(recipientId, "In function respondToMessageText()");
+  mt = messageText.toLowerCase();
+  if (mt == "preferred cuisine") {
+    intent = "GET_PREFERRED_CUISINE";
+  } else if (mt in ["hi", "hello", "hey"]) {
+    intent = "HELLO";
+  } else if (mt == "get started") {
+    intent = "GET_STARTED";
+  } else if (mt == "debug on") {
+    intent = "DEBUG_ON";
+  } else if (mt == "debug off") {
+    intent = "DEBUG_OFF";
+  } else if (mt == "debug reset") {
+    intent = "RESET";
+  } else {
+    intent = "RESTAURANT";
+  }
+  printDebugStatement(recipientId, "Intent is: " + intent);
+  return intent;
+}
 
 function sendHiMessage (recipientId) {
 	checkUserInGlobalContext(recipientId, true);
+  printDebugStatement(recipientId, "In function sendHiMessage()");
 	var url = "https://graph.facebook.com/v2.6/"+recipientId+"?access_token="+PAGE_ACCESS_TOKEN;
 	request(url, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
@@ -313,6 +348,9 @@ function receivedPostback(event) {
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
+  checkUserInGlobalContext(senderID, false);
+  printDebugStatement(senderID, "In function receivedPostback()");
+
 	if (payload == "USER_DEFINED_PAYLOAD") {
 		sendHiMessage(senderID);
 	}
@@ -327,22 +365,27 @@ function receivedPostback(event) {
 	}
 
 	if (payload == "7:45" || payload == "8:45" || payload == "9:30") {
-	var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
-	request(url, function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-			body = JSON.parse(body);
-			var messageData = {
-			  recipient: {
-				id: senderID
-			  },
-			  message: {
-				text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".\nOh, by the way, you earned a 10% discount by booking with PickMe. Enjoy!",
-				metadata: "DEVELOPER_DEFINED_METADATA"
-			  }
-			};
-		   callSendAPI(messageData);
-		}
-	});
+    printDebugStatement(senderID, "The payload was a time, booking reservation (mock)");
+
+    // TODO: store username in global_context, and check before sending the username
+    // request, so only have to query for it once (will make responses to user faster.)
+
+	  var url = "https://graph.facebook.com/v2.6/"+senderID+"?access_token="+PAGE_ACCESS_TOKEN;
+	  request(url, function(error, response, body) {
+		  if (!error && response.statusCode == 200) {
+  			body = JSON.parse(body);
+  			var messageData = {
+  			  recipient: {
+  				id: senderID
+  			  },
+  			  message: {
+  				text: "Ok, "+body.first_name+". The restaurant is booked for tonight at "+payload+".\nOh, by the way, you earned a 10% discount by booking with PickMe. Enjoy!",
+  				metadata: "DEVELOPER_DEFINED_METADATA"
+  			  }
+  			};
+  		   callSendAPI(messageData);
+  		}
+    });
 	}
 
 }
@@ -376,7 +419,8 @@ function checkUserInGlobalContext(recipientId, reset) {
       preferred_cuisine: "",
       location_lat: "",
       location_long: "",
-	  time: ""
+	    time: "",
+      debug: false
     };
   }
   if (reset == true) {
@@ -384,11 +428,33 @@ function checkUserInGlobalContext(recipientId, reset) {
         preferred_cuisine: "",
         location_lat: "",
         location_long: "",
-		time: ""
+		    time: "",
+        debug: false
       };
   }
 }
 
+// - debug_statement(debug_text)
+//     - calls checkUserInGlobalContext()
+//     - makes a statement text: "DEBUG LOG: ..."
+//     - writes this text to console.log
+//     - if debug is on for user, writes the text to user using callSendAPI
+function printDebugStatement(userId, debugText) {
+  checkUserInGlobalContext(userId, false);
+  console.log(debugText);
+  if (global_context[userId]['debug']) {
+    var messageData = {
+      recipient: {
+        id: userId
+      },
+      message: {
+        text: debugText,
+        metadata: "DEVELOPER_DEFINED_METADATA"
+      }
+    };
+    callSendAPI(messageData);
+  }
+}
 
 function getCuisineType(recipientId, messageText) {
 
@@ -416,6 +482,7 @@ function sendPreferredCuisineMessage(recipientId) {
   var output_text = "No preferred cuisine specified";
 
   checkUserInGlobalContext(recipientId, false)
+  printDebugStatement(recipientId, "In function sendPreferredCuisineMessage()");
   var preferred_cuisine = global_context[recipientId]['preferred_cuisine']
   if (preferred_cuisine != "") {
     output_text = "Preferred cuisine is " + preferred_cuisine;
@@ -436,7 +503,8 @@ function sendPreferredCuisineMessage(recipientId) {
 
 
 function sendRestaurantMessage(recipientId, messageText) {
-  checkUserInGlobalContext(recipientId, false)
+  checkUserInGlobalContext(recipientId, false);
+  printDebugStatement(recipientId, "In function sendRestaurantMessage()");
 
   // Get cuisine.
   // Replace this with watson to get intent and entity.
@@ -545,6 +613,7 @@ function(err, result) {
  */
 function sendLocationMessage(senderID, messageAttachments) {
   checkUserInGlobalContext(senderID, false);
+  printDebugStatement(senderID, "In function sendLocationMessage()");
 
   var location_lat = messageAttachments[0].payload.coordinates.lat;
   var location_long = messageAttachments[0].payload.coordinates.long;
